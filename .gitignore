@@ -1,0 +1,29 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Local envs
+.env
+.env.local
+.env.*.local
+
+# Hardhat
+artifacts/
+cache/
+typechain-types/
+
+# Next.js
+.next/
+out/
+
+# Dependencies
+node_modules/
+
+# Logs and Misc
+*.log
+.DS_Store
+.vscode/
+.idea/
+coverage/
+deployments.json

@@ -1,0 +1,28 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: NodeRegistry
+    network: bnb
+    source:
+      address: "0x0000000000000000000000000000000000000000"
+      abi: NodeRegistry
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Node
+      abis:
+        - name: NodeRegistry
+          file: ../artifacts/contracts/NodeRegistry.sol/NodeRegistry.json
+      eventHandlers:
+        - event: NodeRegistered(indexed address,uint8,uint256,string)
+          handler: handleNodeRegistered
+        - event: ReputationUpdated(indexed address,uint256,uint256)
+          handler: handleReputationUpdated
+        - event: HeartbeatReceived(indexed address,uint256,uint256)
+          handler: handleHeartbeatReceived
+      file: ./src/mapping.ts

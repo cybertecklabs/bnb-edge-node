@@ -1,0 +1,34 @@
+type Node @entity {
+  id: ID!
+  operator: Bytes!
+  nodeType: Int!
+  stakedAmount: BigInt!
+  reputationScore: BigInt!
+  totalUptime: BigInt!
+  lastHeartbeat: BigInt!
+  metadataURI: String!
+  status: Int!
+}
+
+type Agent @entity {
+  id: ID!
+  owner: Bytes!
+  capabilities: String!
+  reputation: BigInt!
+}
+
+type Job @entity {
+  id: ID!
+  client: Bytes!
+  assignedNode: Node
+  jobType: Int!
+  status: Int!
+  payment: BigInt!
+}
+
+type DailyStat @entity {
+  id: ID!
+  date: Int!
+  totalJobs: BigInt!
+  totalVolume: BigInt!
+}
