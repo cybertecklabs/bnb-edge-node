@@ -64,6 +64,6 @@ Targeting AI startups and researchers who need cost-effective H100/A100 compute 
 ## 🏗 Built With
 *   **Chain:** opBNB
 *   **Contracts:** Solidity v0.8.20 + OpenZeppelin
-*   **Frontend:** Next.js 14, wagmi, RainbowKit, Tailwind CSS
+*   **Frontend:** Static HTML/CSS, FontAwesome, Google Fonts
 *   **Backend:** FastAPI (Python), Web3.py
 *   **Storage:** IPFS (Pinata)

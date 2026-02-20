@@ -94,11 +94,32 @@ Nodes bid down prices in real-time, often reaching 70-80% savings compared to AW
 
 ---
 
-## 📦 Quick Start (Deploy in 10 Minutes)
+## 🌐 Frontend Dashboard: Command Center v2
+
+The BNB Edge interface has been completely rebuilt for the hackathon to provide a **sci-fi, mission-critical experience** for DePIN operators.
+
+**Live Demo**: [https://bnb-edge-dashboard.vercel.app](https://bnb-edge-dashboard.vercel.app)
+**Video Tour**: [YouTube Link](https://youtube.com/...)
+
+### 📸 Dashboard Showcase
+
+> *Screenshots of the Command Dashboard, Nodes Library, and Analytics Page*
+
+### Key Features
+- **Real-Time Monitoring**: Live Websocket feeds for uptime, bandwidth, and earnings.
+- **Atmospheric UI**: Glassmorphism, animated scanlines, and reactive "BNB Yellow" branding.
+- **Node Management**: Sortable registry with reputation bars and health status.
+- **Visual Analytics**: Interactive maps, network capacity growth, and tokenomics.
+- **Job Queue**: Live feed of compute tasks with progress bars and status indicators.
+- **Build Logs**: Terminal-style view of node operations in real-time.
+- **AI Health Monitor**: Predictive uptime scoring with automated alerting.
+
+### 📦 Quick Start (Deploy in 10 Minutes)
 
 ### Installation
 ```bash
 npm install
+cd frontend && npm install
 ```
 
 ### Configuration
@@ -109,6 +130,14 @@ Copy `.env.example` to `.env` and fill in your `PRIVATE_KEY` and RPC URLs.
 # Deploy to opBNB Testnet
 npx hardhat run scripts/deploy.ts --network opbnbTestnet
 ```
+
+### Run Frontend
+The frontend is a self-contained static HTML dashboard.
+```bash
+# Open the dashboard directly in your browser
+open frontend/index.html
+```
+No installation or dev server is required for the demo dashboard.
 
 ---
 

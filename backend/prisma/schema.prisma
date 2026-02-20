@@ -1,0 +1,123 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  address   String   @unique
+  nonce     String?
+  roles     String   @default("[\"CLIENT\"]") // JSON array string
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  nodes        Node[]
+  clusters     Cluster[]
+  proxies      Proxy[]
+}
+
+model Node {
+  id          String   @id @default(cuid())
+  address     String   @unique
+  ownerId     String
+  owner       User     @relation(fields: [ownerId], references: [id])
+  type        String
+  stake       Float    @default(0)
+  reputation  Int      @default(50)
+  status      String   @default("active")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Cluster {
+  id        String   @id @default(cuid())
+  name      String
+  location  String?
+  ownerId   String
+  owner     User     @relation(fields: [ownerId], references: [id])
+  status    String   @default("running")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  farmProfiles FarmProfile[]
+}
+
+model FarmProfile {
+  id            String   @id @default(cuid())
+  clusterId     String
+  cluster       Cluster  @relation(fields: [clusterId], references: [id])
+  name          String   // "Grass-Account-1"
+  proxyId       String?  @unique
+  proxy         Proxy?   @relation(fields: [proxyId], references: [id])
+  fingerprint   String?  // JSON string for fingerprint config
+  wallets       String?  // JSON string array of linked wallet addresses
+  status        String   @default("active") // active, paused, banned
+  earningsUSD   Float    @default(0)
+  projects      String   @default("[]") // JSON string array
+  
+  sessions      Session[]
+  profitLogs    ProfitLog[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Proxy {
+  id          String   @id @default(cuid())
+  endpoint    String   @unique // ip:port
+  protocol    String   @default("SOCKS5")
+  country     String
+  city        String?
+  provider    String   // gonzoproxy, travchis, etc.
+  trafficUsed Float    @default(0)
+  trafficLeft Float    @default(0)
+  status      String   @default("active") // active, exhausted, dead
+  ownerId     String
+  owner       User     @relation(fields: [ownerId], references: [id])
+  
+  assignedProfileId String? @unique
+  farmProfile       FarmProfile?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Session {
+  id            String   @id @default(cuid())
+  farmProfileId String
+  farmProfile   FarmProfile @relation(fields: [farmProfileId], references: [id])
+  project       String
+  sessionId     String   @unique
+  startTime     DateTime @default(now())
+  endTime       DateTime?
+  status        String   @default("active")
+}
+
+model ProfitLog {
+  id            String   @id @default(cuid())
+  farmProfileId String
+  farmProfile   FarmProfile @relation(fields: [farmProfileId], references: [id])
+  amount        Float
+  currency      String
+  timestamp     DateTime @default(now())
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  name        String   @unique // Grass, Dawn, Gradient, etc.
+  type        String   // bandwidth, compute, storage
+  website     String?
+  apiEndpoint String?
+  contract    String?  // BSC contract address if any
+  token       String?  // $GRASS, $DAWN, etc.
+  icon        String?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
