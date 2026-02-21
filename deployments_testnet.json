@@ -1,0 +1,17 @@
+{
+    "network": "opBNB Testnet",
+    "chainId": 5611,
+    "rpc": "https://opbnb-testnet-rpc.bnbchain.org",
+    "explorer": "https://testnet.opbnbscan.com",
+    "deployedAt": "2026-02-21",
+    "deployer": "FILL_DEPLOYER_ADDRESS",
+    "usdc": "0x4410C9D5D957D385EeE34092aE2B16490D357ce3",
+    "WorkerRegistry": "FILL_WORKER_REGISTRY_ADDRESS",
+    "RewardVault": "FILL_REWARD_VAULT_ADDRESS",
+    "txns": {
+        "WorkerRegistry_deploy": "FILL_TX_HASH",
+        "RewardVault_deploy": "FILL_TX_HASH",
+        "example_register": "FILL_TX_HASH",
+        "example_claim": "FILL_TX_HASH"
+    }
+}

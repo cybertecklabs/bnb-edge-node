@@ -79,72 +79,94 @@ Tiered SLAs (BASIC, GOLD, PLATINUM) with automated penalty payouts from node sta
 ### 4. Built in Public: Live, Verifiable Build Log
 A dedicated timeline fetching GitHub commits to prove development transparency and protocol evolution.
 
-### 5. Reverse Auction Engine & AWS Cost Comparator
+### 5. OpenClaw Mobile AI Agent Integration
+Connect your smartphone (via Termux) to operate as a local, fully decentralized AI agent node. Control and monitor the agent directly from the BNB Edge dashboard. See [MOBILE_AGENT_SETUP.md](./MOBILE_AGENT_SETUP.md) for 24/7 setup instructions on Android.
+
+### 6. Reverse Auction Engine & AWS Cost Comparator
 Nodes bid down prices in real-time, often reaching 70-80% savings compared to AWS/GCP.
+
+---
+
+## 🔗 Live Protocol — opBNB Testnet
+
+| Contract | Address | Explorer |
+|---|---|---|
+| **WorkerRegistry** | `FILL_AFTER_DEPLOY` | [opBNBscan](https://testnet.opbnbscan.com/address/FILL_AFTER_DEPLOY) |
+| **RewardVault** | `FILL_AFTER_DEPLOY` | [opBNBscan](https://testnet.opbnbscan.com/address/FILL_AFTER_DEPLOY) |
+| **Test USDC** | `0x4410C9D5D957D385EeE34092aE2B16490D357ce3` | [opBNBscan](https://testnet.opbnbscan.com/address/0x4410C9D5D957D385EeE34092aE2B16490D357ce3) |
+
+> **Network:** opBNB Testnet (Chain ID: 5611) · **RPC:** `https://opbnb-testnet-rpc.bnbchain.org`
+
+---
+
+## 🧠 Live Protocol Architecture
+
+```
+[Dashboard Frontend] ←─ ethers.js ─→ [WorkerRegistry.sol]  ←→  [RewardVault.sol]
+       │                                (stake, register)        (epoch roots, claims)
+       │ JWT / REST                              ↑                       ↑
+       └──────────────→ [Node.js Backend] ←──────────────────────────────┘
+                          GET /api/epoch/proof   ← Merkle proof server
+                          GET /api/agent/status  ← OpenClaw Termux agent
+```
 
 ---
 
 ## 🛠️ Technology Stack
 
-- **Blockchain**: opBNB, Solidity 0.8.24
-- **Contracts**: Hardhat, Ethers.js, OpenZeppelin v5
-- **Frontend**: Next.js 14, Tailwind CSS, RainbowKit, Wagmi v2
-- **Data Indexing**: The Graph
-- **AI Service**: FastAPI, WebSockets, Web3.py
+- **Blockchain**: opBNB (Chain ID: 5611), Solidity 0.8.20
+- **Contracts**: Hardhat, Ethers.js v6, OpenZeppelin v5
+- **Frontend**: Vanilla HTML/CSS/JS · Ethers.js UMD · Cyberpunk UI
+- **Backend**: Node.js, Express, Prisma (SQLite), Socket.IO
+- **Merkle Rewards**: merkletreejs + keccak256
+- **AI Agent**: OpenClaw via Termux (mobile 24/7 node)
 
 ---
 
-## 🌐 Frontend Dashboard: Command Center v2
+## 📦 Quick Start (Deploy in 10 Minutes)
 
-The BNB Edge interface has been completely rebuilt for the hackathon to provide a **sci-fi, mission-critical experience** for DePIN operators.
+### 1. Get testnet BNB from the faucet
+Visit [faucet.opbnb.network](https://faucet.opbnb.network) and fund your deployer wallet.
 
-**Live Demo**: [https://bnb-edge-dashboard.vercel.app](https://bnb-edge-dashboard.vercel.app)
-**Video Tour**: [YouTube Link](https://youtube.com/...)
-
-### 📸 Dashboard Showcase
-
-> *Screenshots of the Command Dashboard, Nodes Library, and Analytics Page*
-
-### Key Features
-- **Real-Time Monitoring**: Live Websocket feeds for uptime, bandwidth, and earnings.
-- **Atmospheric UI**: Glassmorphism, animated scanlines, and reactive "BNB Yellow" branding.
-- **Node Management**: Sortable registry with reputation bars and health status.
-- **Visual Analytics**: Interactive maps, network capacity growth, and tokenomics.
-- **Job Queue**: Live feed of compute tasks with progress bars and status indicators.
-- **Build Logs**: Terminal-style view of node operations in real-time.
-- **AI Health Monitor**: Predictive uptime scoring with automated alerting.
-
-### 📦 Quick Start (Deploy in 10 Minutes)
-
-### Installation
+### 2. Set your private key
 ```bash
-npm install
-cd frontend && npm install
+echo "PRIVATE_KEY=0xYourActualPrivateKey" > .env
 ```
 
-### Configuration
-Copy `.env.example` to `.env` and fill in your `PRIVATE_KEY` and RPC URLs.
-
-### Deployment
+### 3. Deploy contracts
 ```bash
-# Deploy to opBNB Testnet
-npx hardhat run scripts/deploy.ts --network opbnbTestnet
+npx hardhat run scripts/deploy_winning.ts --network opbnbTestnet
 ```
 
-### Run Frontend
-The frontend is a self-contained static HTML dashboard.
+### 4. Inject addresses into the frontend
 ```bash
-# Open the dashboard directly in your browser
-open frontend/index.html
+# Fill in the addresses in deployments_testnet.json, then:
+node scripts/inject-addresses.js
 ```
-No installation or dev server is required for the demo dashboard.
+
+### 5. Run the backend
+```bash
+cd backend && npm install && npm run dev
+```
+
+### 6. Serve the frontend
+```bash
+cd frontend && npx http-server -p 8080
+```
+
+### 7. Run an epoch (submit Merkle root to chain)
+```bash
+node scripts/epoch-distributor.js
+```
+
+The dashboard at `http://localhost:8080` will now show **live on-chain stats** and the **Register Node** / **Claim Reward** buttons will fire real testnet transactions.
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT License — see [LICENSE](LICENSE) for details.
 
 ---
 
-Built with ❤️ by the BNB EdgeGrid team for the BNB Chain ecosystem.
+Built with ❤️ by **Cyberteck Labs** for the BNB Chain ecosystem. 🏆

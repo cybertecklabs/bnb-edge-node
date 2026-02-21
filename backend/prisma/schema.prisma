@@ -1,123 +1,154 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./dev.db"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-  id        String   @id @default(cuid())
-  address   String   @unique
-  nonce     String?
-  roles     String   @default("[\"CLIENT\"]") // JSON array string
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
+  id           String        @id @default(cuid())
+  address      String        @unique
+  nonce        String?
+  roles        String        @default("CLIENT") // Comma separated: "ADMIN,PROVIDER,CLIENT"
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
   nodes        Node[]
+  jobsCreated  Job[]         @relation("Creator")
+  jobsAssigned Job[]         @relation("Assignee")
+  activityLogs ActivityLog[]
   clusters     Cluster[]
+  farmProfiles FarmProfile[]
   proxies      Proxy[]
 }
 
 model Node {
+  id         String   @id @default(cuid())
+  ownerId    String
+  owner      User     @relation(fields: [ownerId], references: [id])
+  address    String   @unique
+  type       String
+  status     String   @default("active")
+  stake      Float
+  reputation Int      @default(50)
+  metadata   String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  jobs       Job[]
+}
+
+model Job {
+  id          String    @id @default(cuid())
+  jobId       Int       @unique
+  creatorId   String
+  creator     User      @relation("Creator", fields: [creatorId], references: [id])
+  assigneeId  String?
+  assignee    User?     @relation("Assignee", fields: [assigneeId], references: [id])
+  nodeId      String?
+  node        Node?     @relation(fields: [nodeId], references: [id])
+  taskCID     String
+  resultCID   String?
+  payment     Float
+  minRep      Int       @default(50)
+  status      String    @default("open")
+  createdAt   DateTime  @default(now())
+  completedAt DateTime?
+  txHash      String?
+}
+
+model ActivityLog {
   id          String   @id @default(cuid())
-  address     String   @unique
-  ownerId     String
-  owner       User     @relation(fields: [ownerId], references: [id])
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id])
   type        String
-  stake       Float    @default(0)
-  reputation  Int      @default(50)
-  status      String   @default("active")
+  description String
+  metadata    String?
   createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
 }
 
 model Cluster {
-  id        String   @id @default(cuid())
-  name      String
-  location  String?
-  ownerId   String
-  owner     User     @relation(fields: [ownerId], references: [id])
-  status    String   @default("running")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
+  id           String        @id @default(cuid())
+  ownerId      String
+  owner        User          @relation(fields: [ownerId], references: [id])
+  name         String
+  totalStake   Float         @default(0)
+  uptime       Float         @default(0)
+  location     String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
   farmProfiles FarmProfile[]
+  proxies      Proxy[]
 }
 
 model FarmProfile {
-  id            String   @id @default(cuid())
-  clusterId     String
-  cluster       Cluster  @relation(fields: [clusterId], references: [id])
-  name          String   // "Grass-Account-1"
-  proxyId       String?  @unique
-  proxy         Proxy?   @relation(fields: [proxyId], references: [id])
-  fingerprint   String?  // JSON string for fingerprint config
-  wallets       String?  // JSON string array of linked wallet addresses
-  status        String   @default("active") // active, paused, banned
-  earningsUSD   Float    @default(0)
-  projects      String   @default("[]") // JSON string array
-  
-  sessions      Session[]
-  profitLogs    ProfitLog[]
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id          String      @id @default(cuid())
+  clusterId   String
+  cluster     Cluster     @relation(fields: [clusterId], references: [id])
+  ownerId     String
+  owner       User        @relation(fields: [ownerId], references: [id])
+  name        String
+  proxyId     String?     @unique
+  proxy       Proxy?      @relation("AssignedProxy", fields: [proxyId], references: [id])
+  fingerprint String      @default("{}")
+  wallets     String      @default("[]")
+  projects    String      @default("Grass") // Comma separated
+  status      String      @default("paused")
+  earningsUSD Float       @default(0)
+  uptime      Float       @default(0)
+  lastSeen    DateTime    @updatedAt
+  createdAt   DateTime    @default(now())
+  sessions    Session[]
+  profitLogs  ProfitLog[]
 }
 
 model Proxy {
-  id          String   @id @default(cuid())
-  endpoint    String   @unique // ip:port
-  protocol    String   @default("SOCKS5")
-  country     String
-  city        String?
-  provider    String   // gonzoproxy, travchis, etc.
-  trafficUsed Float    @default(0)
-  trafficLeft Float    @default(0)
-  status      String   @default("active") // active, exhausted, dead
-  ownerId     String
-  owner       User     @relation(fields: [ownerId], references: [id])
-  
-  assignedProfileId String? @unique
-  farmProfile       FarmProfile?
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id              String       @id @default(cuid())
+  ownerId         String
+  owner           User         @relation(fields: [ownerId], references: [id])
+  clusterId       String?
+  cluster         Cluster?     @relation(fields: [clusterId], references: [id])
+  endpoint        String       @unique
+  protocol        String
+  country         String
+  city            String
+  provider        String
+  trafficUsed     Float        @default(0)
+  trafficLeft     Float
+  status          String       @default("active")
+  pricePerGB      Float
+  assignedProfile FarmProfile? @relation("AssignedProxy")
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
 }
 
 model Session {
-  id            String   @id @default(cuid())
+  id            String      @id @default(cuid())
   farmProfileId String
   farmProfile   FarmProfile @relation(fields: [farmProfileId], references: [id])
   project       String
-  sessionId     String   @unique
-  startTime     DateTime @default(now())
-  endTime       DateTime?
-  status        String   @default("active")
+  sessionId     String      @unique
+  pid           Int?
+  startedAt     DateTime    @default(now())
+  endedAt       DateTime?
+  earnings      Float       @default(0)
 }
 
 model ProfitLog {
-  id            String   @id @default(cuid())
+  id            String      @id @default(cuid())
   farmProfileId String
   farmProfile   FarmProfile @relation(fields: [farmProfileId], references: [id])
-  amount        Float
-  currency      String
-  timestamp     DateTime @default(now())
+  oldProject    String
+  newProject    String
+  profitGain    Float
+  createdAt     DateTime    @default(now())
 }
 
-model Project {
-  id          String   @id @default(cuid())
-  name        String   @unique // Grass, Dawn, Gradient, etc.
-  type        String   // bandwidth, compute, storage
-  website     String?
-  apiEndpoint String?
-  contract    String?  // BSC contract address if any
-  token       String?  // $GRASS, $DAWN, etc.
-  icon        String?
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+model OptimizerSettings {
+  id               String   @id @default(cuid())
+  ownerId          String   @unique
+  autoOptimize     Boolean  @default(true)
+  switchThreshold  Float    @default(15)
+  includedProjects String   @default("Grass,Dawn,Nodepay") // Comma separated
+  updatedAt        DateTime @updatedAt
 }

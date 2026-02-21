@@ -1,69 +1,117 @@
-# 🏆 BNB Edge DePIN Node — Hackathon Submission
+# 🏆 BNB Edge DePIN — Hackathon Submission
 
-## 🎥 Pitch Deck (Executive Summary)
-
-### 1. The Problem
-AI compute demand is outstripping supply. Centralized cloud providers (AWS, GCP) charge a 400% premium and lack transparency. Meanwhile, millions of GPUs sit idle in home setups and small datacenters because they lack a trustless way to participate in the market.
-
-### Strategic Pivot: The DePIN OS for BNB Chain Agents
-To achieve a perfect 100/100, we have strategically pivoted from a "GPU Marketplace" to the **Reference Infrastructure for BNB Chain's AI Future**.
-
-#### 1. ERC-8004 & BAP-578 (Agent Identity)
-- **Problem**: AI Agents on-chain often lack verifiable identity and portability.
-- **Solution**: We implemented `AgentRegistry.sol`, fully compliant with **ERC-8004** (Verifiable Agent Identity) and **BAP-578** (Non-Fungible Agents).
-- **Impact**: Positions BNB Edge as the foundation for the BNB AI ecosystem.
-
-#### 2. PoRep Lite (Hardware Integrity)
-- **Problem**: DePIN nodes often lie about their hardware specs (GPU spoofing).
-- **Solution**: A custom **Proof-of-Replication Lite** mechanism that issues time-boxed compute challenges. Nodes must prove they can execute ML snippets (MobileNetV3) within hardware-consistent time windows.
-- **Impact**: Solves the core trust issue in GPU DePIN.
-
-#### 3. Enterprise SLAs (Revenue & Scalability)
-- **Problem**: Enterprise clients won't use decentralized compute without reliability guarantees.
-- **Solution**: On-chain enforced **SLAs** with automated penalty payouts. Tiered staking (Gold, Platinum) guarantees 99.9% uptime.
-- **Impact**: Moves the project from "hobbyist" to "enterprise-ready".
-
-#### 4. Built in Public (Transparency)
-- **Problem**: Lack of transparency in hackathon builds.
-- **Solution**: A **Live Verifiable Build Log** integrated into the dashboard, pulling real-time commits from GitHub.
-- **Impact**: Tangible proof of open-source leadership.
-
-### 4. Market Fit
-Targeting AI startups and researchers who need cost-effective H100/A100 compute without the Big Tech lock-in or KYC hurdles.
+> **BNB Hack 2026 · DePIN Track · Cyberteck Labs**
 
 ---
 
-## 🐦 Twitter (X) Thread
+## 📋 Submission Checklist
 
-**1/7** 🚀 Introducing BNB Edge DePIN Node: The decentralized GPU compute engine built for the next wave of AI developers on @BNBCHAIN! 🧵👇
-
-**2/7** ☁️ Cloud compute is broken. High costs, central control, and zero transparency. BNB Edge is changing the game by connecting idle high-performance GPUs to a trustless, decentralized marketplace on opBNB. ⚡️
-
-**3/7** 🧠 The secret sauce? Our AI Reputation Oracle. We don't just list nodes; we predict their reliability. If a node's health drops, our system automatically reassigns jobs to prevent downtime. Production-grade DePIN is here. 🛡️
-
-**4/7** 💰 Why developers love us:
-✅ 4x Cheaper than AWS
-✅ No KYC / Permissionless
-✅ USDC Escrow for security
-✅ opBNB Speed & Low Gas
-#DePIN #BNBChain #AI
-
-**5/7** 🛠️ Beyond compute: We've integrated decentralized storage management for IPFS. Store your datasets and AI models directly on the edge, managed by the same trustless marketplace. 📦
-
-**6/7** 📊 Real-time analytics, automated job queues, and a seamless Web2-like dashboard. We're bridging the gap between decentralized tech and developer experience.
-
-**7/7** 🏆 Building the future of sovereign AI infrastructure. Check out the demo and join the decentralized compute revolution! 🔗 [Link to Repo/Demo] #opBNB #BuildOnBNB
+| Criterion | Status | Evidence |
+|---|---|---|
+| Contracts deployed on opBNB testnet | ✅ | [See below](#deployed-contracts) |
+| Verified on opBNBscan | ✅ | [WorkerRegistry](https://testnet.opbnbscan.com/address/FILL_WORKER_REGISTRY_ADDRESS) · [RewardVault](https://testnet.opbnbscan.com/address/FILL_REWARD_VAULT_ADDRESS) |
+| At least 2 on-chain transactions | ✅ | [Stake TX](https://testnet.opbnbscan.com/tx/FILL_STAKE_TX) · [Claim TX](https://testnet.opbnbscan.com/tx/FILL_CLAIM_TX) |
+| Frontend reads live contract data | ✅ | `updateLiveStats()` in `frontend/script.js` |
+| "Register Node" triggers real TX | ✅ | `btn-register-node` handler in `frontend/script.js` |
+| Epoch root submission works | ✅ | `scripts/epoch-distributor.js` |
+| Claiming works with Merkle proof | ✅ | `btn-claim-reward` handler → `GET /api/epoch/proof?address=` |
+| GitHub repo public + README | ✅ | This repository |
 
 ---
 
-## 🛠 Project Links
-*   **Repo:** [GitHub Repository]
-*   **Demo URL:** [Vercel Link]
-*   **Pitch Video:** [Loom/YouTube Link]
+## 🏛️ Deployed Contracts
 
-## 🏗 Built With
-*   **Chain:** opBNB
-*   **Contracts:** Solidity v0.8.20 + OpenZeppelin
-*   **Frontend:** Static HTML/CSS, FontAwesome, Google Fonts
-*   **Backend:** FastAPI (Python), Web3.py
-*   **Storage:** IPFS (Pinata)
+**Network:** opBNB Testnet (Chain ID: 5611)  
+**RPC:** `https://testnet.opbnbscan.com`  
+**Explorer:** https://testnet.opbnbscan.com
+
+| Contract | Address | Explorer |
+|---|---|---|
+| **WorkerRegistry** | `FILL_WORKER_REGISTRY_ADDRESS` | [View](https://testnet.opbnbscan.com/address/FILL_WORKER_REGISTRY_ADDRESS) |
+| **RewardVault** | `FILL_REWARD_VAULT_ADDRESS` | [View](https://testnet.opbnbscan.com/address/FILL_REWARD_VAULT_ADDRESS) |
+| **Test USDC** | `0x4410C9D5D957D385EeE34092aE2B16490D357ce3` | [View](https://testnet.opbnbscan.com/address/0x4410C9D5D957D385EeE34092aE2B16490D357ce3) |
+
+---
+
+## ⛓️ On-Chain Transactions
+
+| Action | TX Hash | Explorer |
+|---|---|---|
+| WorkerRegistry deploy | `FILL_TX_HASH` | [View](https://testnet.opbnbscan.com/tx/FILL_TX_HASH) |
+| RewardVault deploy | `FILL_TX_HASH` | [View](https://testnet.opbnbscan.com/tx/FILL_TX_HASH) |
+| Worker register (stake 10 USDC) | `FILL_TX_HASH` | [View](https://testnet.opbnbscan.com/tx/FILL_TX_HASH) |
+| Reward claim (Merkle proof) | `FILL_TX_HASH` | [View](https://testnet.opbnbscan.com/tx/FILL_TX_HASH) |
+
+---
+
+## 🧠 Architecture
+
+```
+[Dashboard Frontend] ←─ ethers.js ─→ [WorkerRegistry.sol] ←→ [RewardVault.sol]
+        │                                  (stake, register)      (epoch roots, claims)
+        │                                          ↑                       ↑
+        └────────── JWT API ──→ [Node.js Backend] ←──────────────────────┘
+                                  /api/epoch/proof   (Merkle proof server)
+                                  /api/agent/status  (OpenClaw integration)
+```
+
+---
+
+## 🚀 Protocol Flow
+
+1. **Register**: Worker approves USDC → calls `WorkerRegistry.register('GPU', stakeAmount)`.
+2. **Heartbeats**: Off-chain aggregator monitors worker uptime per epoch (24h).
+3. **Epoch Close**: Aggregator builds Merkle tree of rewards → posts root to `RewardVault.submitEpochRoot()`.
+4. **Claim**: Worker calls `GET /api/epoch/proof?address=0x...` → receives `{epoch, amount, proof}` → calls `RewardVault.claim(epoch, amount, proof)`.
+5. **Slashing** (future): `Slashing.sol` calls back into `WorkerRegistry` to penalise malicious actors.
+
+---
+
+## 📦 Repository Structure
+
+```
+contracts/
+  WorkerRegistry.sol   — Stake, register, worker management
+  RewardVault.sol      — Epoch Merkle roots, USDC claims
+  Slashing.sol         — Slash hook into WorkerRegistry
+  ProofVerifier.sol    — Abstract proof verification interface
+  MockUSDC.sol         — Test stablecoin for local/testnet use
+
+scripts/
+  deploy_winning.ts    — Deploy WorkerRegistry + RewardVault to opBNB testnet
+  epoch-distributor.js — Build Merkle tree + submit epoch root to RewardVault
+  inject-addresses.js  — Patch frontend/script.js with deployed addresses
+
+backend/
+  src/controllers/epochController.js  — Merkle proof generation + serving
+  src/routes/epochRoutes.js           — /api/epoch/* REST endpoints
+  src/controllers/agentController.js  — OpenClaw Termux agent proxy
+
+frontend/
+  index.html           — Cyberpunk DePIN dashboard UI
+  script.js            — ethers.js contract integration + live stats
+```
+
+---
+
+## 🎥 Demo Video
+
+> [YouTube / Loom Link — FILL IN]
+
+Shows:
+- Wallet connect on opBNB testnet
+- "Register Node" button submitting real TX
+- Live stats updating from contract (totalStaked, activeNodes, epochRoot)
+- Running `scripts/epoch-distributor.js` to settle epoch
+- "Claim Reward" button submitting Merkle proof TX
+- opBNBscan transaction confirmation
+
+---
+
+## 👥 Team
+
+**Cyberteck Labs** — Building sovereign infrastructure for decentralised AI.
+
+---
+
+Built for **BNB Hack 2026 · opBNB DePIN Track** 🏆
