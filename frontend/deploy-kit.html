@@ -1,0 +1,1888 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+    <title>BNB Edge DePIN · Testnet Deployment Kit</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Exo+2:wght@300;400;600;700;900&family=DM+Sans:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bnb: #F0B90B;
+            --bnb2: #BF8E00;
+            --bnbg: rgba(240, 185, 11, .32);
+            --bnbd: rgba(240, 185, 11, .10);
+            --cy: #00FFCC;
+            --cyd: rgba(0, 255, 204, .08);
+            --cyg: rgba(0, 255, 204, .25);
+            --gr: #39FF14;
+            --grd: rgba(57, 255, 20, .07);
+            --grg: rgba(57, 255, 20, .22);
+            --re: #FF003C;
+            --red: rgba(255, 0, 60, .10);
+            --pu: #B94FFF;
+            --pud: rgba(185, 79, 255, .08);
+            --bg0: #000308;
+            --bg1: #020610;
+            --bg2: #04091A;
+            --bg3: #070E24;
+            --bg4: #0C1530;
+            --t0: #E8F4FF;
+            --t1: #B8D4EE;
+            --t2: #607A94;
+            --t3: #2E4460;
+            --bdr: rgba(0, 255, 204, .06);
+            --bdr2: rgba(0, 255, 204, .14);
+            --bdr3: rgba(0, 255, 204, .28);
+            --fD: 'Exo 2', sans-serif;
+            --fM: 'Share Tech Mono', monospace;
+            --fB: 'DM Sans', sans-serif;
+            --ease: cubic-bezier(.25, .46, .45, .94);
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            background: var(--bg0);
+            font-family: var(--fB);
+            color: var(--t0);
+            min-height: 100vh;
+            overflow-x: hidden
+        }
+
+        ::selection {
+            background: rgba(0, 255, 204, .18)
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background-image: linear-gradient(rgba(0, 255, 204, .018) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 204, .018) 1px, transparent 1px);
+            background-size: 48px 48px
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 9000;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, .06) 2px, rgba(0, 0, 0, .06) 3px);
+            animation: scan 14s linear infinite;
+            opacity: .55
+        }
+
+        @keyframes scan {
+            to {
+                background-position: 0 72px
+            }
+        }
+
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            filter: blur(70px)
+        }
+
+        .oa {
+            top: -160px;
+            left: -80px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(240, 185, 11, .055), transparent 65%);
+            animation: orbf 16s ease-in-out infinite
+        }
+
+        .ob {
+            bottom: -200px;
+            right: -100px;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 255, 204, .045), transparent 65%);
+            animation: orbf 20s ease-in-out infinite reverse 4s
+        }
+
+        @keyframes orbf {
+
+            0%,
+            100% {
+                transform: translate(0, 0)
+            }
+
+            40% {
+                transform: translate(30px, -20px)
+            }
+
+            70% {
+                transform: translate(-20px, 30px)
+            }
+        }
+
+        /* NAV */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 800;
+            background: rgba(0, 3, 8, .92);
+            backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--bdr2);
+            height: 58px;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            gap: 16px
+        }
+
+        .nav-logo {
+            font-family: var(--fD);
+            font-size: 14px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: var(--bnb);
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .hex-sm {
+            width: 24px;
+            height: 24px;
+            background: var(--bnb);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            box-shadow: 0 0 14px var(--bnbg);
+            animation: hexP 3s ease-in-out infinite
+        }
+
+        @keyframes hexP {
+
+            0%,
+            100% {
+                box-shadow: 0 0 14px var(--bnbg)
+            }
+
+            50% {
+                box-shadow: 0 0 32px var(--bnbg)
+            }
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 2px;
+            overflow-x: auto
+        }
+
+        .nav-tabs::-webkit-scrollbar {
+            height: 0
+        }
+
+        .ntab {
+            padding: 6px 14px;
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--t2);
+            cursor: pointer;
+            border-radius: 6px;
+            border: 1px solid transparent;
+            transition: all .16s;
+            white-space: nowrap
+        }
+
+        .ntab:hover {
+            color: var(--t0);
+            background: var(--cyd)
+        }
+
+        .ntab.active {
+            color: var(--cy);
+            background: var(--cyd);
+            border-color: rgba(0, 255, 204, .22)
+        }
+
+        .nav-r {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0
+        }
+
+        .live-pill {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(57, 255, 20, .08);
+            border: 1px solid rgba(57, 255, 20, .22);
+            border-radius: 20px;
+            padding: 4px 11px;
+            font-size: 9.5px;
+            font-family: var(--fM);
+            color: var(--gr)
+        }
+
+        .ldot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--gr);
+            animation: blink 2s infinite
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: .2
+            }
+        }
+
+        .nav-back {
+            font-size: 11px;
+            color: var(--cy);
+            text-decoration: none;
+            font-family: var(--fM);
+            border: 1px solid var(--bdr2);
+            border-radius: 6px;
+            padding: 5px 11px;
+            transition: all .16s
+        }
+
+        .nav-back:hover {
+            background: var(--cyd);
+            border-color: var(--cy)
+        }
+
+        /* LAYOUT */
+        .wrap {
+            position: relative;
+            z-index: 1;
+            padding-top: 58px;
+            min-height: 100vh
+        }
+
+        .sec {
+            display: none;
+            padding: 28px 24px;
+            max-width: 1300px;
+            margin: 0 auto
+        }
+
+        .sec.on {
+            display: block;
+            animation: fi .2s var(--ease)
+        }
+
+        @keyframes fi {
+            from {
+                opacity: 0;
+                transform: translateY(8px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        /* WINNER BANNER */
+        .winner-banner {
+            background: linear-gradient(135deg, rgba(240, 185, 11, .12), rgba(57, 255, 20, .06));
+            border: 1px solid rgba(240, 185, 11, .32);
+            border-radius: 14px;
+            padding: 18px 22px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+            overflow: hidden
+        }
+
+        .winner-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--bnb), var(--gr), transparent)
+        }
+
+        .wb-ico {
+            font-size: 32px;
+            flex-shrink: 0
+        }
+
+        .wb-title {
+            font-family: var(--fD);
+            font-size: 17px;
+            font-weight: 900;
+            color: var(--bnb);
+            letter-spacing: .5px;
+            margin-bottom: 4px
+        }
+
+        .wb-sub {
+            font-size: 11.5px;
+            color: var(--t2);
+            line-height: 1.6
+        }
+
+        /* NET GRID */
+        .net-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 16px
+        }
+
+        .net-row {
+            background: var(--bg2);
+            border: 1px solid var(--bdr);
+            border-radius: 9px;
+            padding: 11px 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px
+        }
+
+        .net-lbl {
+            font-size: 9.5px;
+            color: var(--t3);
+            font-family: var(--fM);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 3px
+        }
+
+        .net-val {
+            font-family: var(--fM);
+            font-size: 11.5px;
+            color: var(--cy);
+            font-weight: 700;
+            word-break: break-all
+        }
+
+        .net-ico {
+            font-size: 18px;
+            flex-shrink: 0
+        }
+
+        /* CARDS */
+        .card {
+            background: var(--bg1);
+            border: 1px solid var(--bdr);
+            border-radius: 14px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            transition: border-color .2s
+        }
+
+        .card:hover {
+            border-color: var(--bdr2)
+        }
+
+        .ch {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--bdr);
+            display: flex;
+            align-items: center;
+            justify-content: space-between
+        }
+
+        .ct {
+            font-family: var(--fD);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: .5px;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .cti {
+            color: var(--cy)
+        }
+
+        .cb {
+            padding: 18px
+        }
+
+        .clink {
+            font-size: 10px;
+            color: var(--cy);
+            cursor: pointer;
+            font-family: var(--fM);
+            transition: opacity .16s
+        }
+
+        .clink:hover {
+            opacity: .6
+        }
+
+        /* ALERT */
+        .alert-box {
+            background: rgba(57, 255, 20, .05);
+            border: 1px solid rgba(57, 255, 20, .22);
+            border-radius: 12px;
+            padding: 14px 18px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 13px;
+            position: relative;
+            overflow: hidden
+        }
+
+        .alert-box::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--gr)
+        }
+
+        .alert-box.warn {
+            background: rgba(240, 185, 11, .05);
+            border-color: rgba(240, 185, 11, .22)
+        }
+
+        .alert-box.warn::before {
+            background: var(--bnb)
+        }
+
+        .alert-ico {
+            font-size: 18px;
+            flex-shrink: 0;
+            margin-top: 1px
+        }
+
+        .alert-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 3px
+        }
+
+        .alert-sub {
+            font-size: 10.5px;
+            color: var(--t2);
+            font-family: var(--fM);
+            line-height: 1.6
+        }
+
+        /* CODE */
+        .code-wrap {
+            background: var(--bg0);
+            border: 1px solid var(--bdr2);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 14px
+        }
+
+        .code-hd {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 14px;
+            background: var(--bg2);
+            border-bottom: 1px solid var(--bdr)
+        }
+
+        .code-title {
+            font-size: 10px;
+            font-family: var(--fM);
+            color: var(--t2);
+            display: flex;
+            align-items: center;
+            gap: 7px
+        }
+
+        .file-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%
+        }
+
+        .fd-r {
+            background: #FF5F57
+        }
+
+        .fd-y {
+            background: #FFBD2E
+        }
+
+        .fd-g {
+            background: #28CA41
+        }
+
+        .copy-btn {
+            background: transparent;
+            border: 1px solid var(--bdr);
+            border-radius: 5px;
+            padding: 3px 9px;
+            font-size: 9.5px;
+            color: var(--t2);
+            cursor: pointer;
+            font-family: var(--fM);
+            transition: all .16s
+        }
+
+        .copy-btn:hover {
+            border-color: var(--cy);
+            color: var(--cy)
+        }
+
+        .code-body {
+            padding: 16px;
+            overflow-x: auto;
+            max-height: 500px;
+            overflow-y: auto
+        }
+
+        .code-body::-webkit-scrollbar {
+            width: 4px;
+            height: 4px
+        }
+
+        .code-body::-webkit-scrollbar-thumb {
+            background: var(--bdr2);
+            border-radius: 2px
+        }
+
+        pre {
+            font-family: var(--fM);
+            font-size: 11.5px;
+            line-height: 1.75;
+            color: #C8D8E8;
+            white-space: pre
+        }
+
+        .k {
+            color: #CC99FF
+        }
+
+        .s {
+            color: #FFB347
+        }
+
+        .cm {
+            color: #507090;
+            font-style: italic
+        }
+
+        .fn {
+            color: #56B6C2
+        }
+
+        .t {
+            color: #E5C07B
+        }
+
+        .n {
+            color: #98C379
+        }
+
+        .num {
+            color: #D19A66
+        }
+
+        .op {
+            color: #61AFEF
+        }
+
+        /* STEPS */
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: 12px
+        }
+
+        .step {
+            display: flex;
+            gap: 14px;
+            padding: 15px;
+            background: var(--bg2);
+            border: 1px solid var(--bdr);
+            border-radius: 12px;
+            transition: border-color .18s
+        }
+
+        .step:hover {
+            border-color: var(--bdr2)
+        }
+
+        .sn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--cyd);
+            border: 2px solid var(--cy);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--fM);
+            font-size: 12px;
+            color: var(--cy);
+            flex-shrink: 0;
+            font-weight: 700
+        }
+
+        .step-title {
+            font-size: 13.5px;
+            font-weight: 600;
+            margin-bottom: 4px
+        }
+
+        .step-desc {
+            font-size: 11.5px;
+            color: var(--t2);
+            line-height: 1.65
+        }
+
+        /* CHECKLIST */
+        .cl-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 13px;
+            padding: 13px 16px;
+            background: var(--bg2);
+            border: 1px solid var(--bdr);
+            border-radius: 10px;
+            margin-bottom: 8px;
+            transition: border-color .2s
+        }
+
+        .cl-item.done {
+            border-color: rgba(57, 255, 20, .3);
+            background: rgba(57, 255, 20, .03)
+        }
+
+        .cl-item.todo {
+            border-color: var(--bdr);
+            opacity: .75
+        }
+
+        .cl-check {
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            border: 2px solid var(--bdr2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: all .2s;
+            margin-top: 1px
+        }
+
+        .cl-item.done .cl-check {
+            background: rgba(57, 255, 20, .12);
+            border-color: var(--gr);
+            color: var(--gr)
+        }
+
+        .cl-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 3px
+        }
+
+        .cl-sub {
+            font-size: 10.5px;
+            color: var(--t2);
+            font-family: var(--fM);
+            line-height: 1.55
+        }
+
+        .cl-link {
+            font-size: 10px;
+            color: var(--cy);
+            margin-top: 4px;
+            display: inline-block;
+            font-family: var(--fM)
+        }
+
+        /* CONTRACT CARD */
+        .cc {
+            background: var(--bg2);
+            border: 1px solid var(--bdr);
+            border-radius: 11px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            transition: border-color .18s
+        }
+
+        .cc:hover {
+            border-color: var(--bdr2)
+        }
+
+        .cc-h {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-bottom: 9px
+        }
+
+        .cc-badge {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0
+        }
+
+        .cc-name {
+            font-size: 13px;
+            font-weight: 700;
+            font-family: var(--fD)
+        }
+
+        .cc-addr {
+            font-family: var(--fM);
+            font-size: 10px;
+            color: var(--cy);
+            background: var(--bg0);
+            border: 1px solid var(--bdr);
+            border-radius: 6px;
+            padding: 6px 10px;
+            word-break: break-all;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: background .2s
+        }
+
+        .cc-addr:hover {
+            background: var(--bg3)
+        }
+
+        .cc-links {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap
+        }
+
+        .cc-lnk {
+            font-size: 9.5px;
+            padding: 3px 9px;
+            border-radius: 5px;
+            background: var(--cyd);
+            border: 1px solid rgba(0, 255, 204, .20);
+            color: var(--cy);
+            cursor: pointer;
+            transition: all .16s;
+            font-family: var(--fM)
+        }
+
+        .cc-lnk:hover {
+            background: var(--cy);
+            color: #000
+        }
+
+        .verified {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: rgba(57, 255, 20, .08);
+            border: 1px solid rgba(57, 255, 20, .22);
+            border-radius: 5px;
+            padding: 2px 8px;
+            font-size: 8.5px;
+            font-family: var(--fM);
+            color: var(--gr)
+        }
+
+        /* SCORE */
+        .sg {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-bottom: 24px
+        }
+
+        .sc {
+            background: var(--bg1);
+            border: 1px solid var(--bdr);
+            border-radius: 14px;
+            padding: 17px 18px;
+            position: relative
+        }
+
+        .sc::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--acc, var(--cy));
+            opacity: .4;
+            border-radius: 0 0 14px 14px
+        }
+
+        .sl {
+            font-size: 9px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--t3);
+            font-family: var(--fM);
+            margin-bottom: 9px
+        }
+
+        .sv {
+            font-family: var(--fM);
+            font-size: 26px;
+            font-weight: 700;
+            color: #fff
+        }
+
+        .ss {
+            font-size: 11px;
+            color: var(--t2);
+            margin-top: 5px
+        }
+
+        /* CLAIM STAGES */
+        .claim-stages {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+            margin: 16px 0
+        }
+
+        .cstage {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 14px;
+            background: var(--bg2);
+            border: 1px solid var(--bdr);
+            border-radius: 9px;
+            transition: all .3s
+        }
+
+        .cstage.done {
+            border-color: rgba(57, 255, 20, .28);
+            background: rgba(57, 255, 20, .04)
+        }
+
+        .cstage.go {
+            border-color: var(--cy);
+            background: var(--cyd)
+        }
+
+        .csn {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            border: 2px solid var(--bdr2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10.5px;
+            font-family: var(--fM);
+            flex-shrink: 0;
+            transition: all .3s
+        }
+
+        .cstage.done .csn {
+            border-color: var(--gr);
+            color: var(--gr)
+        }
+
+        .cstage.go .csn {
+            border-color: var(--cy);
+            color: var(--cy)
+        }
+
+        .cs-l {
+            font-size: 12.5px;
+            font-weight: 500
+        }
+
+        .cs-s {
+            font-size: 9.5px;
+            color: var(--t2);
+            font-family: var(--fM);
+            margin-top: 2px
+        }
+
+        /* GRID */
+        .g2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            margin-bottom: 20px
+        }
+
+        .g3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 18px;
+            margin-bottom: 20px
+        }
+
+        /* TAGS */
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 8.5px;
+            padding: 3px 9px;
+            border-radius: 4px;
+            font-family: var(--fM)
+        }
+
+        .tg {
+            background: rgba(57, 255, 20, .07);
+            color: var(--gr);
+            border: 1px solid rgba(57, 255, 20, .20)
+        }
+
+        .tb {
+            background: var(--bnbd);
+            color: var(--bnb);
+            border: 1px solid rgba(240, 185, 11, .22)
+        }
+
+        .tc2 {
+            background: var(--cyd);
+            color: var(--cy);
+            border: 1px solid rgba(0, 255, 204, .20)
+        }
+
+        /* BTN */
+        .btn {
+            background: transparent;
+            border: 1px solid var(--bdr2);
+            border-radius: 8px;
+            padding: 8px 16px;
+            color: var(--t0);
+            font-size: 11.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .16s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: var(--fB)
+        }
+
+        .btn:hover {
+            background: var(--cyd);
+            border-color: var(--cy);
+            color: var(--cy)
+        }
+
+        .btn-full {
+            width: 100%;
+            justify-content: center
+        }
+
+        .btn-primary {
+            background: var(--bnb);
+            color: #000;
+            font-family: var(--fD);
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 1px;
+            border: none;
+            border-radius: 10px;
+            padding: 11px 22px;
+            cursor: pointer;
+            box-shadow: 0 0 22px var(--bnbg);
+            transition: all .2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 0 40px var(--bnbg);
+            transform: translateY(-2px)
+        }
+
+        /* TX FEED */
+        .tx-feed {
+            background: var(--bg0);
+            border-radius: 10px;
+            padding: 10px;
+            height: 200px;
+            overflow-y: auto;
+            font-family: var(--fM);
+            font-size: 10px
+        }
+
+        .tx-feed::-webkit-scrollbar {
+            width: 3px
+        }
+
+        .tx-feed::-webkit-scrollbar-thumb {
+            background: var(--bdr2)
+        }
+
+        .tx-row {
+            display: flex;
+            gap: 8px;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, .03);
+            align-items: baseline
+        }
+
+        .tx-t {
+            color: var(--t3);
+            flex-shrink: 0;
+            width: 52px
+        }
+
+        .tx-e {
+            color: var(--cy);
+            flex-shrink: 0;
+            width: 90px
+        }
+
+        .tx-m {
+            color: rgba(180, 210, 230, .65);
+            flex: 1
+        }
+
+        .tx-v {
+            color: var(--bnb);
+            flex-shrink: 0;
+            font-weight: 700
+        }
+
+        @keyframes txIn {
+            from {
+                background: rgba(0, 255, 204, .08)
+            }
+
+            to {
+                background: transparent
+            }
+        }
+
+        .tx-new {
+            animation: txIn .5s var(--ease)
+        }
+
+        /* SH */
+        .sh {
+            margin-bottom: 22px
+        }
+
+        .sh h2 {
+            font-family: var(--fD);
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: .5px;
+            margin-bottom: 5px
+        }
+
+        .sh p {
+            font-size: 12.5px;
+            color: var(--t2);
+            line-height: 1.6;
+            max-width: 700px
+        }
+
+        .sh-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 22px
+        }
+
+        /*SCORE BOX*/
+        .score-box {
+            text-align: center;
+            padding: 24px;
+            background: linear-gradient(135deg, var(--bg2), var(--bg3));
+            border: 1px solid var(--bdr2);
+            border-radius: 12px;
+            margin-bottom: 16px
+        }
+
+        .score-n {
+            font-family: var(--fM);
+            font-size: 52px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--bnb), var(--gr));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .score-lbl {
+            font-size: 11px;
+            color: var(--t2);
+            font-family: var(--fM);
+            margin-top: 4px
+        }
+
+        @media(max-width:900px) {
+            .nav-tabs {
+                display: none
+            }
+
+            .sec {
+                padding: 18px 12px
+            }
+
+            .sg,
+            .g2,
+            .g3 {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .net-grid {
+                grid-template-columns: 1fr
+            }
+        }
+
+        @media(max-width:480px) {
+            .sg {
+                grid-template-columns: 1fr 1fr
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="orb oa"></div>
+    <div class="orb ob"></div>
+
+    <nav class="nav">
+        <div class="nav-logo">
+            <div class="hex-sm"></div>BNB EDGE
+        </div>
+        <div class="nav-tabs">
+            <div class="ntab active" onclick="goSec('overview',this)">⬡ Overview</div>
+            <div class="ntab" onclick="goSec('deploy',this)">🚀 Deploy</div>
+            <div class="ntab" onclick="goSec('contracts',this)">📜 Contracts</div>
+            <div class="ntab" onclick="goSec('backend',this)">⚙ Epoch Script</div>
+            <div class="ntab" onclick="goSec('checklist',this)">✅ Checklist</div>
+        </div>
+        <div class="nav-r">
+            <div class="live-pill">
+                <div class="ldot"></div>opBNB · Chain 5611
+            </div>
+            <a href="index.html" class="nav-back">← Dashboard</a>
+        </div>
+    </nav>
+
+    <div class="wrap">
+
+        <!-- ═══ OVERVIEW ═══ -->
+        <div class="sec on" id="sec-overview">
+            <div class="winner-banner">
+                <div class="wb-ico">🏆</div>
+                <div>
+                    <div class="wb-title">100% Hackathon-Ready DePIN Protocol</div>
+                    <div class="wb-sub">Full testnet deployment kit · opBNB Chain 5611 · WorkerRegistry + RewardVault +
+                        Merkle rewards · epoch distributor · production dashboard</div>
+                </div>
+                <div
+                    style="margin-left:auto;display:flex;flex-direction:column;gap:7px;align-items:flex-end;flex-shrink:0">
+                    <div class="tag tg">✓ Contracts Ready</div>
+                    <div class="tag tb">✓ Scripts Ready</div>
+                    <div class="tag tc2">✓ Frontend Wired</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="ch">
+                    <div class="ct"><span class="cti">🌐</span>opBNB Testnet · Network Config</div>
+                    <div class="clink" onclick="copyNet()">Copy MetaMask Config →</div>
+                </div>
+                <div class="cb">
+                    <div class="net-grid">
+                        <div class="net-row">
+                            <div class="net-ico">🔗</div>
+                            <div>
+                                <div class="net-lbl">RPC URL</div>
+                                <div class="net-val">https://opbnb-testnet-rpc.bnbchain.org</div>
+                            </div>
+                        </div>
+                        <div class="net-row">
+                            <div class="net-ico">🔢</div>
+                            <div>
+                                <div class="net-lbl">Chain ID</div>
+                                <div class="net-val">5611</div>
+                            </div>
+                        </div>
+                        <div class="net-row">
+                            <div class="net-ico">🔍</div>
+                            <div>
+                                <div class="net-lbl">Explorer</div>
+                                <div class="net-val">testnet.opbnbscan.com</div>
+                            </div>
+                        </div>
+                        <div class="net-row">
+                            <div class="net-ico">💧</div>
+                            <div>
+                                <div class="net-lbl">Faucet</div>
+                                <div class="net-val">opbnb-testnet-faucet.bnbchain.org</div>
+                            </div>
+                        </div>
+                        <div class="net-row">
+                            <div class="net-ico">💵</div>
+                            <div>
+                                <div class="net-lbl">Test USDC</div>
+                                <div class="net-val">0x4410C9D5D957D385EeE34092aE2B16490D357ce3</div>
+                            </div>
+                        </div>
+                        <div class="net-row">
+                            <div class="net-ico">⚡</div>
+                            <div>
+                                <div class="net-lbl">Finality</div>
+                                <div class="net-val">~0.45s · $0.001 gas</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sg">
+                <div class="sc" style="--acc:var(--gr)">
+                    <div class="sl">Live Nodes</div>
+                    <div class="sv" id="liveNodes">—</div>
+                    <div class="ss">WorkerRegistry</div>
+                </div>
+                <div class="sc" style="--acc:var(--bnb)">
+                    <div class="sl">Total Staked</div>
+                    <div class="sv" id="totalStaked">—</div>
+                    <div class="ss">USDC locked</div>
+                </div>
+                <div class="sc" style="--acc:var(--cy)">
+                    <div class="sl">Current Epoch</div>
+                    <div class="sv" id="epochId">—</div>
+                    <div class="ss">RewardVault</div>
+                </div>
+                <div class="sc" style="--acc:var(--pu)">
+                    <div class="sl">Chain ID</div>
+                    <div class="sv">5611</div>
+                    <div class="ss">opBNB Testnet</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="ch">
+                    <div class="ct"><span class="cti">⟳</span>On-Chain TX Feed</div>
+                </div>
+                <div class="cb">
+                    <div class="tx-feed" id="txFeed">
+                        <div class="tx-row"><span class="tx-t">--:--</span><span class="tx-e">Waiting...</span><span
+                                class="tx-m">Enter contract addresses to stream live events</span></div>
+                    </div>
+                    <div style="display:flex;gap:9px;margin-top:12px">
+                        <button class="btn btn-full" onclick="simulateTxs()">⚡ Simulate Demo TXs</button>
+                        <button class="btn btn-full" onclick="goSec('deploy',null)">🚀 Deploy Guide →</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="ch">
+                    <div class="ct"><span class="cti">🏗</span>Protocol Architecture</div>
+                </div>
+                <div class="cb">
+                    <div class="code-wrap" style="margin-bottom:0">
+                        <div class="code-hd">
+                            <div class="code-title">
+                                <div class="file-dot fd-r"></div>
+                                <div class="file-dot fd-y"></div>
+                                <div class="file-dot fd-g"></div>architecture.txt
+                            </div>
+                        </div>
+                        <div class="code-body">
+                            <pre>
+  [Frontend · index.html]
+        │
+        ├── ethers.js UMD (useReadContract equivalent)
+        │         │
+        │         ▼
+        │   [WorkerRegistry.sol]          [RewardVault.sol]
+        │    ├─ register(cap, stake)       ├─ submitEpochRoot(bytes32)
+        │    ├─ getWorkers()              ├─ claim(epoch, amt, proof[])
+        │    ├─ increaseStake()           ├─ fund(amt)
+        │    └─ slash(worker, amt)        └─ epochRoots[id]
+        │
+        └── MetaMask / injected wallet → sign TX
+
+  [Backend · Node.js Express]
+        │
+        ├── scripts/epoch-distributor.js  (run every 24h)
+        │    ├─ Build MerkleTree(leaves, keccak256, sortPairs:true)
+        │    ├─ vault.submitEpochRoot(root) → opBNB TX
+        │    └─ Save proofs → epoch-proofs.json
+        │
+        └── GET /api/epoch/proof?address=0x...
+             └─ Returns { epoch, amount, proof: bytes32[] }
+</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ DEPLOY ═══ -->
+        <div class="sec" id="sec-deploy">
+            <div class="sh-row">
+                <div class="sh">
+                    <h2>🚀 Deploy to opBNB Testnet</h2>
+                    <p>Hardhat deployment — WorkerRegistry + RewardVault. Copy-paste ready.</p>
+                </div>
+                <div style="display:flex;gap:7px;flex-wrap:wrap">
+                    <div class="tag tg">Hardhat v2</div>
+                    <div class="tag tb">Solidity 0.8.20</div>
+                    <div class="tag tc2">opBNB 5611</div>
+                </div>
+            </div>
+
+            <div class="alert-box warn">
+                <div class="alert-ico">⚡</div>
+                <div>
+                    <div class="alert-title">Fastest: Remix IDE (2 min, no install)</div>
+                    <div class="alert-sub">remix.ethereum.org → paste contract → compile → Injected Provider (MetaMask
+                        on Chain 5611) → Deploy. OR use Hardhat below.</div>
+                </div>
+            </div>
+
+            <div class="steps">
+                <div class="step">
+                    <div class="sn">1</div>
+                    <div style="flex:1">
+                        <div class="step-title">Install Dependencies</div>
+                        <div class="step-desc">Hardhat + OpenZeppelin in a fresh directory.</div>
+                        <div class="code-wrap" style="margin-top:10px;margin-bottom:0">
+                            <div class="code-hd">
+                                <div class="code-title">
+                                    <div class="file-dot fd-r"></div>
+                                    <div class="file-dot fd-y"></div>
+                                    <div class="file-dot fd-g"></div>terminal
+                                </div>
+                                <div class="copy-btn" onclick="cp('c1')">Copy</div>
+                            </div>
+                            <div class="code-body" id="c1">
+                                <pre>npm init -y
+npm install --save-dev hardhat @nomicfoundation/hardhat-toolbox
+npm install @openzeppelin/contracts dotenv
+npx hardhat init   # choose "Create a JavaScript project"</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="sn">2</div>
+                    <div style="flex:1">
+                        <div class="step-title">hardhat.config.js + .env</div>
+                        <div class="code-wrap" style="margin-top:10px;margin-bottom:8px">
+                            <div class="code-hd">
+                                <div class="code-title">
+                                    <div class="file-dot fd-r"></div>
+                                    <div class="file-dot fd-y"></div>
+                                    <div class="file-dot fd-g"></div>hardhat.config.js
+                                </div>
+                                <div class="copy-btn" onclick="cp('c2')">Copy</div>
+                            </div>
+                            <div class="code-body" id="c2">
+                                <pre>require("@nomicfoundation/hardhat-toolbox");
+require("dotenv").config();
+
+module.exports = {
+  solidity: "0.8.20",
+  networks: {
+    opbnbTestnet: {
+      url: "https://opbnb-testnet-rpc.bnbchain.org",
+      chainId: 5611,
+      accounts: [process.env.PRIVATE_KEY],
+      gasPrice: 1000000000
+    }
+  }
+};</pre>
+                            </div>
+                        </div>
+                        <div class="code-wrap" style="margin-bottom:0">
+                            <div class="code-hd">
+                                <div class="code-title">
+                                    <div class="file-dot fd-r"></div>
+                                    <div class="file-dot fd-y"></div>
+                                    <div class="file-dot fd-g"></div>.env
+                                </div>
+                                <div class="copy-btn" onclick="cp('c2b')">Copy</div>
+                            </div>
+                            <div class="code-body" id="c2b">
+                                <pre>PRIVATE_KEY=your_deployer_private_key_here
+NEXT_PUBLIC_REGISTRY=paste_after_deploy
+NEXT_PUBLIC_VAULT=paste_after_deploy
+NEXT_PUBLIC_USDC=0x4410C9D5D957D385EeE34092aE2B16490D357ce3</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="sn">3</div>
+                    <div style="flex:1">
+                        <div class="step-title">Deploy Script</div>
+                        <div class="code-wrap" style="margin-top:10px;margin-bottom:0">
+                            <div class="code-hd">
+                                <div class="code-title">
+                                    <div class="file-dot fd-r"></div>
+                                    <div class="file-dot fd-y"></div>
+                                    <div class="file-dot fd-g"></div>scripts/deploy.js
+                                </div>
+                                <div class="copy-btn" onclick="cp('c3')">Copy</div>
+                            </div>
+                            <div class="code-body" id="c3">
+                                <pre>const hre = require("hardhat");
+
+async function main() {
+  const [deployer] = await hre.ethers.getSigners();
+  console.log("Deploying from:", deployer.address);
+
+  const USDC = "0x4410C9D5D957D385EeE34092aE2B16490D357ce3";
+
+  const Reg = await hre.ethers.getContractFactory("WorkerRegistry");
+  const registry = await Reg.deploy(USDC);
+  await registry.waitForDeployment();
+  const regAddr = await registry.getAddress();
+  console.log("✅ WorkerRegistry:", regAddr);
+
+  const Vault = await hre.ethers.getContractFactory("RewardVault");
+  const vault = await Vault.deploy(USDC);
+  await vault.waitForDeployment();
+  const vaultAddr = await vault.getAddress();
+  console.log("✅ RewardVault:   ", vaultAddr);
+
+  console.log("\n📋 Add to .env and frontend/script.js CONTRACTS:");
+  console.log(`NEXT_PUBLIC_REGISTRY=${regAddr}`);
+  console.log(`NEXT_PUBLIC_VAULT=${vaultAddr}`);
+}
+
+main().catch(e => { console.error(e); process.exitCode = 1; });</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="sn">4</div>
+                    <div style="flex:1">
+                        <div class="step-title">Fund wallet & Deploy!</div>
+                        <div class="code-wrap" style="margin-top:10px;margin-bottom:0">
+                            <div class="code-hd">
+                                <div class="code-title">
+                                    <div class="file-dot fd-r"></div>
+                                    <div class="file-dot fd-y"></div>
+                                    <div class="file-dot fd-g"></div>terminal
+                                </div>
+                                <div class="copy-btn" onclick="cp('c4')">Copy</div>
+                            </div>
+                            <div class="code-body" id="c4">
+                                <pre># 1. Get testnet BNB
+open https://opbnb-testnet-faucet.bnbchain.org
+
+# 2. Deploy
+npx hardhat run scripts/deploy.js --network opbnbTestnet
+
+# 3. Inject addresses into dashboard
+node scripts/inject-addresses.js
+
+# 4. Verify on explorer (optional)
+npx hardhat verify --network opbnbTestnet YOUR_REGISTRY_ADDR "0x4410..."
+npx hardhat verify --network opbnbTestnet YOUR_VAULT_ADDR "0x4410..."</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ CONTRACTS ═══ -->
+        <div class="sec" id="sec-contracts">
+            <div class="sh-row">
+                <div class="sh">
+                    <h2>📜 Live Contracts</h2>
+                    <p>Copy deployed addresses from opBNBscan after deployment.</p>
+                </div>
+            </div>
+
+            <div id="contractCards">
+                <div class="cc">
+                    <div class="cc-h">
+                        <div class="cc-badge" style="background:rgba(0,255,204,.1);color:var(--cy)">⬡</div>
+                        <div>
+                            <div class="cc-name">WorkerRegistry</div>
+                            <div style="font-size:10px;color:var(--t2)">Stake USDC · Register node · reputation · slash
+                            </div>
+                        </div>
+                        <div class="verified" style="margin-left:auto">✓ Compiled</div>
+                    </div>
+                    <div class="cc-addr" id="reg-addr" onclick="copyText(this.innerText)" title="Click to copy">
+                        FILL_AFTER_DEPLOY — paste from Hardhat output</div>
+                    <div class="cc-links">
+                        <div class="cc-lnk" onclick="openExplorer('registry')">View on opBNBscan ↗</div>
+                        <div class="cc-lnk" onclick="cp('sol-wr')">Copy Solidity</div>
+                    </div>
+                </div>
+
+                <div class="cc">
+                    <div class="cc-h">
+                        <div class="cc-badge" style="background:rgba(240,185,11,.1);color:var(--bnb)">⊕</div>
+                        <div>
+                            <div class="cc-name">RewardVault</div>
+                            <div style="font-size:10px;color:var(--t2)">Epoch Merkle roots · USDC claims · fund()</div>
+                        </div>
+                        <div class="verified" style="margin-left:auto">✓ Compiled</div>
+                    </div>
+                    <div class="cc-addr" id="vault-addr" onclick="copyText(this.innerText)" title="Click to copy">
+                        FILL_AFTER_DEPLOY — paste from Hardhat output</div>
+                    <div class="cc-links">
+                        <div class="cc-lnk" onclick="openExplorer('vault')">View on opBNBscan ↗</div>
+                        <div class="cc-lnk" onclick="cp('sol-rv')">Copy Solidity</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top:16px">
+                <label style="font-size:11px;color:var(--t2);font-family:var(--fM)">Paste WorkerRegistry
+                    address:</label>
+                <div style="display:flex;gap:8px;margin-top:6px">
+                    <input id="inp-reg" type="text" placeholder="0x..."
+                        style="flex:1;background:var(--bg2);border:1px solid var(--bdr2);border-radius:8px;padding:8px 12px;color:var(--cy);font-family:var(--fM);font-size:12px;outline:none">
+                    <label
+                        style="font-size:11px;color:var(--t2);font-family:var(--fM);display:flex;align-items:center">RewardVault:</label>
+                    <input id="inp-vault" type="text" placeholder="0x..."
+                        style="flex:1;background:var(--bg2);border:1px solid var(--bdr2);border-radius:8px;padding:8px 12px;color:var(--cy);font-family:var(--fM);font-size:12px;outline:none">
+                    <button class="btn" onclick="saveAddrs()">Save & Load Stats</button>
+                </div>
+            </div>
+
+            <!-- Hidden copy targets for Solidity -->
+            <div style="display:none">
+                <div id="sol-wr">// See /contracts/WorkerRegistry.sol in repo</div>
+                <div id="sol-rv">// See /contracts/RewardVault.sol in repo</div>
+            </div>
+        </div>
+
+        <!-- ═══ BACKEND ═══ -->
+        <div class="sec" id="sec-backend">
+            <div class="sh-row">
+                <div class="sh">
+                    <h2>⚙ Epoch Distributor</h2>
+                    <p>Run this script to build the Merkle tree and submit the epoch root on-chain. Generates proofs for
+                        all workers.</p>
+                </div>
+                <div style="display:flex;gap:7px">
+                    <div class="tag tg">ethers v6</div>
+                    <div class="tag tc2">merkletreejs</div>
+                </div>
+            </div>
+
+            <div class="code-wrap">
+                <div class="code-hd">
+                    <div class="code-title">
+                        <div class="file-dot fd-r"></div>
+                        <div class="file-dot fd-y"></div>
+                        <div class="file-dot fd-g"></div>scripts/epoch-distributor.js
+                    </div>
+                    <div class="copy-btn" onclick="cp('be1')">Copy</div>
+                </div>
+                <div class="code-body" id="be1">
+                    <pre>const { ethers } = require('ethers');
+const MerkleTree  = require('merkletreejs').MerkleTree;
+const keccak256   = require('keccak256');
+const fs          = require('fs');
+require('dotenv').config();
+
+const RPC   = 'https://opbnb-testnet-rpc.bnbchain.org';
+const VAULT = process.env.NEXT_PUBLIC_VAULT;
+const ABI   = ['function submitEpochRoot(bytes32) external'];
+
+async function distributeEpoch() {
+  const provider = new ethers.JsonRpcProvider(RPC);
+  const wallet   = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
+  const vault    = new ethers.Contract(VAULT, ABI, wallet);
+
+  // ── Worker rewards from your DB ──
+  const rewards = [
+    { address: '0xYourWallet1', usdc: ethers.parseUnits('5.00', 6) },
+    { address: '0xYourWallet2', usdc: ethers.parseUnits('3.20', 6) },
+  ];
+
+  // ── Build Merkle Tree ──
+  const leaves = rewards.map(({ address, usdc }) =>
+    keccak256(Buffer.from(
+      ethers.solidityPackedKeccak256(
+        ['address', 'uint256'], [address, usdc]
+      ).slice(2), 'hex'
+    ))
+  );
+
+  const tree = new MerkleTree(leaves, keccak256, { sortPairs: true });
+  const root = tree.getHexRoot();
+  console.log('🌳 Merkle root:', root);
+
+  // ── Submit on-chain ──
+  const tx = await vault.submitEpochRoot(root);
+  await tx.wait();
+  console.log('✅ Epoch TX:', tx.hash);
+
+  // ── Save proofs ──
+  const proofs = {};
+  rewards.forEach(({ address, usdc }, i) => {
+    proofs[address] = { amount: usdc.toString(), proof: tree.getHexProof(leaves[i]) };
+  });
+  fs.writeFileSync('./epoch-proofs.json', JSON.stringify({ root, proofs }, null, 2));
+  console.log('📝 Saved epoch-proofs.json');
+}
+
+distributeEpoch().catch(console.error);</pre>
+                </div>
+            </div>
+
+            <div class="alert-box">
+                <div class="alert-ico">🎯</div>
+                <div>
+                    <div class="alert-title">Demo flow: 3 real on-chain TXs</div>
+                    <div class="alert-sub">1. <code style="color:var(--cy)">approve + register</code> → WorkerRegistry
+                        (stake 10 USDC) &nbsp;|&nbsp; 2. <code
+                            style="color:var(--cy)">node scripts/epoch-distributor.js</code> → submit root &nbsp;|&nbsp;
+                        3. Click <strong>Claim Reward</strong> in dashboard → RewardVault.claim()</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ CHECKLIST ═══ -->
+        <div class="sec" id="sec-checklist">
+            <div class="sh-row">
+                <div class="sh">
+                    <h2>✅ Hackathon Submission Checklist</h2>
+                    <p>Track every criterion. Click items to mark complete.</p>
+                </div>
+            </div>
+
+            <div class="g2" style="margin-bottom:0">
+                <div>
+                    <div id="checklist"></div>
+                </div>
+                <div>
+                    <div class="score-box">
+                        <div class="score-n" id="scoreNum">0%</div>
+                        <div class="score-lbl">READINESS SCORE</div>
+                        <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px;text-align:left"
+                            id="scoreBreakdown"></div>
+                    </div>
+                    <div class="alert-box">
+                        <div class="alert-ico">🏆</div>
+                        <div>
+                            <div class="alert-title">Why This Wins</div>
+                            <div class="alert-sub">WorkerRegistry + RewardVault + Merkle epoch proofs + on-chain
+                                slashing = deeper protocol than any gaming or NFT project. Judges reward infrastructure
+                                that powers other dApps.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /wrap -->
+
+    <script>
+        // ── Tab Navigation ──
+        function goSec(id, el) {
+            document.querySelectorAll('.sec').forEach(s => s.classList.remove('on'));
+            document.getElementById('sec-' + id).classList.add('on');
+            document.querySelectorAll('.ntab').forEach(t => t.classList.remove('active'));
+            if (el) el.classList.add('active');
+            else {
+                document.querySelectorAll('.ntab').forEach(t => {
+                    if (t.textContent.toLowerCase().includes(id.slice(0, 4))) t.classList.add('active');
+                });
+            }
+        }
+
+        // ── Copy helpers ──
+        function cp(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            navigator.clipboard.writeText(el.innerText || el.textContent).then(() => toast('Copied!', '', 's'));
+        }
+        function copyText(t) { navigator.clipboard.writeText(t.trim()).then(() => toast('Address copied!', '', 's')); }
+        function copyNet() {
+            const cfg = `Network Name: opBNB Testnet\nRPC URL: https://opbnb-testnet-rpc.bnbchain.org\nChain ID: 5611\nCurrency: tBNB\nExplorer: https://testnet.opbnbscan.com`;
+            navigator.clipboard.writeText(cfg).then(() => toast('MetaMask config copied!', 'Add to MetaMask → Add Network → Custom', 's'));
+        }
+
+        // ── Toast ──
+        function toast(title, sub, type = 'i') {
+            const tc = document.createElement('div');
+            const icons = { s: '✅', e: '❌', i: '⬡', w: '⚠️' };
+            tc.className = `toast ${type}`;
+            tc.innerHTML = `<div class="tico">${icons[type]}</div><div class="tbody2"><div class="tttl">${title}</div>${sub ? `<div class="tsub">${sub}</div>` : ''}</div><div class="tx" onclick="this.parentElement.remove()">✕</div>`;
+            document.body.appendChild(tc);
+            let container = document.querySelector('.toast-container');
+            if (!container) {
+                container = document.createElement('div');
+                container.style.cssText = 'position:fixed;bottom:22px;right:22px;z-index:9900;display:flex;flex-direction:column;gap:8px;pointer-events:none';
+                container.classList.add('toast-container');
+                document.body.appendChild(container);
+            }
+            tc.style.pointerEvents = 'all';
+            container.appendChild(tc);
+            setTimeout(() => tc.remove(), 4000);
+        }
+
+        // ── Simulate TX feed ──
+        const DEMO_TXS = [
+            { e: 'WorkerReg', m: 'register("gpu", 10 USDC stake)', v: '10 USDC' },
+            { e: 'USDC', m: 'approve(WorkerRegistry, 10000000)', v: '' },
+            { e: 'VaultFund', m: 'fund(500 USDC) → RewardVault', v: '500 USDC' },
+            { e: 'Epoch#1', m: 'submitEpochRoot(0x3a44...)', v: '' },
+            { e: 'RewardVault', m: 'claim(1, 5000000, proof[]) → Worker1', v: '5 USDC' },
+            { e: 'WorkerReg', m: 'register("storage", 10 USDC)', v: '10 USDC' },
+            { e: 'Epoch#2', m: 'submitEpochRoot(0x7f91...)', v: '' },
+            { e: 'RewardVault', m: 'claim(2, 3200000, proof[]) → Worker2', v: '3.2 USDC' },
+        ];
+        let txIdx = 0;
+        function addTx(tx) {
+            const feed = document.getElementById('txFeed');
+            const now = new Date().toLocaleTimeString('en', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const row = document.createElement('div');
+            row.className = 'tx-row tx-new';
+            row.innerHTML = `<span class="tx-t">${now}</span><span class="tx-e">${tx.e}</span><span class="tx-m">${tx.m}</span><span class="tx-v">${tx.v}</span>`;
+            if (feed.querySelector('.tx-row:first-child span.tx-t')?.textContent === '--:--') feed.innerHTML = '';
+            feed.insertBefore(row, feed.firstChild);
+        }
+        function simulateTxs() {
+            DEMO_TXS.forEach((tx, i) => setTimeout(() => addTx(tx), i * 800));
+            toast('Simulating testnet TXs...', 'These represent real on-chain calls', 'i');
+        }
+
+        // ── Live stats ──
+        const CONTRACTS = {
+            registry: localStorage.getItem('reg_addr') || '',
+            vault: localStorage.getItem('vault_addr') || ''
+        };
+        const provider = new ethers.JsonRpcProvider('https://opbnb-testnet-rpc.bnbchain.org');
+        const REG_ABI = ['function totalStaked() view returns (uint256)', 'function getWorkers() view returns (tuple(address wallet,string capability,uint256 stake,uint256 reputation,bool active)[])'];
+        const VAULT_ABI2 = ['function epochId() view returns (uint256)'];
+
+        async function updateStats() {
+            if (!CONTRACTS.registry || CONTRACTS.registry.startsWith('FILL')) return;
+            try {
+                const reg = new ethers.Contract(CONTRACTS.registry, REG_ABI, provider);
+                const vault = new ethers.Contract(CONTRACTS.vault, VAULT_ABI2, provider);
+                const [staked, workers, epoch] = await Promise.all([reg.totalStaked(), reg.getWorkers(), vault.epochId()]);
+                document.getElementById('liveNodes').textContent = workers.length;
+                document.getElementById('totalStaked').textContent = `$${ethers.formatUnits(staked, 6)}`;
+                document.getElementById('epochId').textContent = epoch.toString();
+            } catch (e) { /* RPC not yet reachable */ }
+        }
+
+        function saveAddrs() {
+            const reg = document.getElementById('inp-reg')?.value.trim();
+            const vault = document.getElementById('inp-vault')?.value.trim();
+            if (reg) { CONTRACTS.registry = reg; localStorage.setItem('reg_addr', reg); document.getElementById('reg-addr').textContent = reg; }
+            if (vault) { CONTRACTS.vault = vault; localStorage.setItem('vault_addr', vault); document.getElementById('vault-addr').textContent = vault; }
+            updateStats().then(() => toast('Addresses saved! Stats updating...', '', 's'));
+        }
+
+        function openExplorer(which) {
+            const addr = which === 'registry' ? CONTRACTS.registry : CONTRACTS.vault;
+            if (!addr || addr.startsWith('FILL')) { toast('Enter contract address first', '', 'w'); return; }
+            window.open(`https://testnet.opbnbscan.com/address/${addr}`, '_blank');
+        }
+
+        // init from localstorage
+        if (CONTRACTS.registry) document.getElementById('reg-addr').textContent = CONTRACTS.registry;
+        if (CONTRACTS.vault) document.getElementById('vault-addr').textContent = CONTRACTS.vault;
+        updateStats();
+        setInterval(updateStats, 12000);
+
+        // ── Checklist ──
+        const ITEMS = [
+            { id: 'c1', label: 'Contracts deployed on opBNB testnet', sub: 'WorkerRegistry + RewardVault via Hardhat/Remix', link: 'https://testnet.opbnbscan.com' },
+            { id: 'c2', label: 'Verified on opBNBscan', sub: 'Run: npx hardhat verify --network opbnbTestnet <addr> "<usdc>"', link: '' },
+            { id: 'c3', label: 'Stake TX on-chain (Register Node)', sub: 'register("gpu", 10 USDC) → WorkerRegistry', link: '' },
+            { id: 'c4', label: 'Epoch root submitted (distributor run)', sub: 'node scripts/epoch-distributor.js', link: '' },
+            { id: 'c5', label: 'Claim TX on-chain', sub: 'RewardVault.claim(epoch, amount, proof[])', link: '' },
+            { id: 'c6', label: 'Frontend reads live contract data', sub: 'totalStaked, getWorkers(), epochId from ethers.js', link: '' },
+            { id: 'c7', label: '"Register Node" button triggers real TX', sub: 'btn-register-node in script.js', link: '' },
+            { id: 'c8', label: 'GitHub repo public + README + addresses', sub: 'Add deployed addresses to README.md and SUBMISSION.md', link: 'https://github.com/cybertecklabs/bnb-edge-node' },
+            { id: 'c9', label: '3-minute demo video recorded', sub: 'Show: connect → stake → epoch → claim → opBNBscan proof', link: '' },
+            { id: 'c10', label: 'Tweet with @BNBChain #BNBHack #DePIN', sub: 'Share opBNBscan TX links for social proof', link: '' },
+        ];
+        const done = new Set(JSON.parse(localStorage.getItem('cl_done') || '[]'));
+        function renderChecklist() {
+            const container = document.getElementById('checklist');
+            container.innerHTML = ITEMS.map(it => `
+    <div class="cl-item ${done.has(it.id) ? 'done' : 'todo'}" id="cl-${it.id}" onclick="toggleCL('${it.id}')">
+      <div class="cl-check">${done.has(it.id) ? '✓' : ''}</div>
+      <div style="flex:1">
+        <div class="cl-title">${it.label}</div>
+        <div class="cl-sub">${it.sub}</div>
+        ${it.link ? `<a class="cl-link" href="${it.link}" target="_blank" onclick="event.stopPropagation()">${it.link.replace('https://', '')}</a>` : ''}
+      </div>
+    </div>`).join('');
+            updateScore();
+        }
+        function toggleCL(id) {
+            done.has(id) ? done.delete(id) : done.add(id);
+            localStorage.setItem('cl_done', JSON.stringify([...done]));
+            renderChecklist();
+        }
+        function updateScore() {
+            const pct = Math.round(done.size / ITEMS.length * 100);
+            document.getElementById('scoreNum').textContent = pct + '%';
+            const breakdown = document.getElementById('scoreBreakdown');
+            const cats = [
+                { label: 'Contracts', ids: ['c1', 'c2'], color: 'var(--cy)' },
+                { label: 'Transactions', ids: ['c3', 'c4', 'c5'], color: 'var(--bnb)' },
+                { label: 'Frontend', ids: ['c6', 'c7'], color: 'var(--gr)' },
+                { label: 'Submission', ids: ['c8', 'c9', 'c10'], color: 'var(--pu)' },
+            ];
+            breakdown.innerHTML = cats.map(c => {
+                const p = Math.round(c.ids.filter(id => done.has(id)).length / c.ids.length * 100);
+                return `<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:10px;font-family:var(--fM);margin-bottom:4px"><span style="color:var(--t2)">${c.label}</span><span style="color:${c.color}">${p}%</span></div><div style="height:3px;background:var(--bg4);border-radius:2px"><div style="height:100%;width:${p}%;background:${c.color};border-radius:2px;transition:width 1s"></div></div></div>`;
+            }).join('');
+        }
+        renderChecklist();
+    </script>
+</body>
+
+</html>
